@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 import os
-import opls_rewrite as opls_itp_rewrite
+import OPLSCM5.opls_rewrite as opls_itp_rewrite
 import argparse
 import subprocess
-import Orca2CM5charges as CM5
+import OPLSCM5.Orca2CM5charges as CM5
 
 def get_gromacs_top_dir():
     
@@ -36,7 +36,9 @@ def orca_inp_prep(molecfile):
     text=f"!RKS RIJCOSX M062X cc-pVDZ PMODEL PAL6\n%maxcore 10000\n% output\n\n        Print[P_hirshfeld] 1\n\n end\n\n*xyzfile 0 1 {molecfile}.xyz\n\n"
     with open(f'{molecfile}_orca.inp', 'w') as f:
         f.write(text)
-if __name__ == "__main__":
+def main():
+    # This is the main function that will be called when the script is run
+# if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='usage of MKTOP and and ORCA')
 
     parser.add_argument("-i", "--molecfile", help="the top file from the mktop", type=str)
@@ -52,10 +54,10 @@ if __name__ == "__main__":
     print('####### Doing Orca calculation ################')
     print('creating the xyz file for orca')
     os.system(f'obabel {mol_name}.pdb -O {mol_name}.xyz')
-    print('creating the orca input file')
+    print('Running orca')
     orca_inp_prep(mol_name)
-    ORCA_EXE = subprocess.check_output("which orca", shell=True, text=True).strip()
-    os.system(f'{ORCA_EXE} {mol_name}_orca.inp > {mol_name}_orca.log')
+    # ORCA_EXE = subprocess.check_output("which orca", shell=True, text=True).strip()
+    # os.system(f'{ORCA_EXE} {mol_name}_orca.inp > {mol_name}_orca.log')
     a0,rd,pt = CM5.LoadModel()
     data = CM5.GetLogFile(f'{mol_name}_orca.log',pt,rd)
     qcm5 = CM5.HirshfeldToCM5(data,a0)
@@ -88,3 +90,6 @@ if __name__ == "__main__":
     opls_itp_rewrite.dih_itp(nonbond_file,bond_file,itp_old_read,itp_new_read)
     # opls_itp_rewrite.dih_itp(nonbond_file,bond_file,itp_old_read,itp_new_read,'improper')
     opls_itp_rewrite.rest_itp(itp_old_read,itp_new_read)
+
+if __name__ == "__main__":
+    main()

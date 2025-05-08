@@ -1,0 +1,10 @@
+!RKS RIJCOSX M062X cc-pVDZ PMODEL PAL6
+%maxcore 10000
+% output
+
+        Print[P_hirshfeld] 1
+
+ end
+
+*xyzfile 0 1 carb.xyz
+

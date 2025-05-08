@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import os
 import argparse
+import importlib.resources as pkg_resources
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
@@ -111,7 +112,7 @@ def xyz_prep(df):
 
 def LoadModel(): 
     import json
-    with open("cm5pars.json") as tweetfile:
+    with pkg_resources.files("OPLSCM5").joinpath("cm5pars.json").open("r") as tweetfile:
         cm5_model = json.loads(tweetfile.read())
     a0_df = pd.DataFrame.from_dict(cm5_model['A0'])
     rd_df = pd.DataFrame.from_dict(cm5_model['radii'])
