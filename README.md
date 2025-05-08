@@ -39,5 +39,6 @@ conda install -c conda-forge rdkit openbabel
 pip install -e .
 
 ## Application
-Generating the topolgy file for the molecule.pdb
+Generating the topolgy file for the molecule.pdb:
+
 itp_rewrite -i molecule
