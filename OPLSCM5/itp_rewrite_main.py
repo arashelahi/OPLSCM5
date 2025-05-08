@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
 import os
-import OPLSCM5.opls_rewrite as opls_itp_rewrite
 import argparse
 import subprocess
+import OPLSCM5
+import OPLSCM5.opls_rewrite as opls_itp_rewrite
 import OPLSCM5.Orca2CM5charges as CM5
 
 def get_gromacs_top_dir():
@@ -73,7 +74,8 @@ def main():
 
     ## Creating the pdb file and top files using mktop and obabel
     # os.system(f'obabel {mol_name}.xyz -O {mol_name}.pdb')
-    os.system(f'./mktop.pl -i {mol_name}.pdb -o {mol_name}.top -ff opls -conect no')
+    mktop_path = os.path.join(os.path.dirname(OPLSCM5.__file__), "mktop.pl")
+    os.system(f'{mktop_path} -i {mol_name}.pdb -o {mol_name}.top -ff opls -conect no')
 
     if os.path.exists(str(itp_new_read)):
         os.remove(itp_new_read) 
