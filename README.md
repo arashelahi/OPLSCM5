@@ -24,11 +24,12 @@ This software utilizes a few archived or deprticated packages,particularly mktop
 ## Installation
 Cloning the repository and creating a conda environment.
 
-Dependencies:
+### Dependencies:
 1 - ORCA software for partial charge calculation
+
 2 - GROMACS, to detect the bonded interaction parameters from the GROMACS library.
 
-
+### Installing the OPLSCM5 package
 conda create -n OPLSCM5 python=3.11
 
 conda activate OPLSCM5
