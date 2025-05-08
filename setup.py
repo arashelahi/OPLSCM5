@@ -1,9 +1,16 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="CNCstruc",
+    name="OPLSCM5",
     version="0.1",
-    packages=find_packages(),  # Automatically finds and includes all sub-packages
-    install_requires=[          # List dependencies if needed
+    packages=find_packages(),
+    install_requires=[
+        "pandas",
+        "numpy",   # often installed as 'openbabel-wheel' or from conda
     ],
+    entry_points={
+        "console_scripts": [
+            "itp_rewrite = OPLSCM5.itp_rewrite_main:main"
+        ]
+    }
 )
