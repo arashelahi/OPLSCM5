@@ -9,31 +9,31 @@ import Orca2CM5charges as CM5
 def get_gromacs_top_dir():
     
         # Run the shell command and capture output
-    # for cmd in [["gmx_mpi"]]:
-    cmd = ["gmx_mpi"]
-    try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            check=True
-        )
+    for cmd in [["gmx_mpi"] , ["gmx"]]:
+    # cmd = ["gmx_mpi"]
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                check=True
+            )
 
-        for line in result.stderr.splitlines():
-            if "Data prefix" in line:
-                # Split by colon and strip whitespace
-                prefix = line.split(":", 1)[1].strip()
-                return os.path.join(prefix, "share", "gromacs", "top" , "oplsaa.ff")
+            for line in result.stderr.splitlines():
+                if "Data prefix" in line:
+                    # Split by colon and strip whitespace
+                    prefix = line.split(":", 1)[1].strip()
+                    return os.path.join(prefix, "share", "gromacs", "top" , "oplsaa.ff")
 
-    except FileNotFoundError:
-        print("Error: gmx_mpi not found.")
-    except subprocess.CalledProcessError:
-        print("Error: Failed to run gmx_mpi -help.")
+        except FileNotFoundError:
+            print("Error: gmx_mpi not found.")
+        except subprocess.CalledProcessError:
+            print("Error: Failed to run gmx_mpi -help.")
 
 def orca_inp_prep(molecfile):
     # Create the input file for ORCA
 
-    text=f"!RKS RIJCOSX M062X cc-pVDZ PMODEL\n%maxcore 10000\n% output\n\n        Print[P_hirshfeld] 1\n\n end\n\n*xyzfile 0 1 {molecfile}.xyz\n\n"
+    text=f"!RKS RIJCOSX M062X cc-pVDZ PMODEL PAL6\n%maxcore 10000\n% output\n\n        Print[P_hirshfeld] 1\n\n end\n\n*xyzfile 0 1 {molecfile}.xyz\n\n"
     with open(f'{molecfile}_orca.inp', 'w') as f:
         f.write(text)
 if __name__ == "__main__":
@@ -41,22 +41,23 @@ if __name__ == "__main__":
 
     parser.add_argument("-i", "--molecfile", help="the top file from the mktop", type=str)
     args = parser.parse_args()
-    itp_old_read='%s.top' % args.molecfile
-    itp_new_read='%s.itp' % args.molecfile
+    mol_name=args.molecfile[:-4]
+    itp_old_read='%s.top' % mol_name
+    itp_new_read='%s.itp' % mol_name
     # charge_file=args.chargefile
-    charge_file = '%s_charges.csv' % args.molecfile
+    charge_file = '%s_charges.csv' % mol_name
     # ffpath = args.ffpath
-    mol_name=args.molecfile
+    
     # Doing the Orca analysis
     print('####### Doing Orca calculation ################')
     print('creating the xyz file for orca')
-    os.system(f'obabel {args.molecfile}.pdb -O {args.molecfile}.xyz')
+    os.system(f'obabel {mol_name}.pdb -O {mol_name}.xyz')
     print('creating the orca input file')
-    orca_inp_prep(args.molecfile)
-    os.system('orca carb_orca.inp | tee carb_orca.log')
-    os.system(f'orca {args.molecfile}_orca.inp > {args.molecfile}_orca.log')
+    orca_inp_prep(mol_name)
+    ORCA_EXE = subprocess.check_output("which orca", shell=True, text=True).strip()
+    os.system(f'{ORCA_EXE} {mol_name}_orca.inp > {mol_name}_orca.log')
     a0,rd,pt = CM5.LoadModel()
-    data = CM5.GetLogFile(f'{args.molecfile}_orca.log',pt,rd)
+    data = CM5.GetLogFile(f'{mol_name}_orca.log',pt,rd)
     qcm5 = CM5.HirshfeldToCM5(data,a0)
     qcm5.to_csv(charge_file,index=False,float_format='%7.5f')
     # print(qcm5)
@@ -69,8 +70,8 @@ if __name__ == "__main__":
     # print(bond_file)
 
     ## Creating the pdb file and top files using mktop and obabel
-    # os.system(f'obabel {args.molecfile}.xyz -O {args.molecfile}.pdb')
-    os.system(f'./mktop.pl -i {args.molecfile}.pdb -o {args.molecfile}.top -ff opls -conect no')
+    # os.system(f'obabel {mol_name}.xyz -O {mol_name}.pdb')
+    os.system(f'./mktop.pl -i {mol_name}.pdb -o {mol_name}.top -ff opls -conect no')
 
     if os.path.exists(str(itp_new_read)):
         os.remove(itp_new_read) 
