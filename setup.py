@@ -10,7 +10,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "itp_gen = OPLSCM5.itp_rewrite_main:main"
+            "OPLSCM5_gen = OPLSCM5.itp_rewrite_main:main"
         ]
     }
 )
