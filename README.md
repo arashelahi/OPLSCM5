@@ -30,9 +30,13 @@ Dependencies:
 
 
 conda create -n OPLSCM5 python=3.11
+
 conda activate OPLSCM5
+
 conda install -c conda-forge rdkit openbabel
+
 pip install -e .
+
 ## Application
 Generating the topolgy file for the molecule.pdb
 itp_rewrite -i molecule
