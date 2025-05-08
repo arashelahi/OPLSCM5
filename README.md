@@ -41,4 +41,5 @@ pip install -e .
 ## Application
 Generating the topolgy file for the molecule.pdb:
 
-itp_rewrite -i molecule
+OPLSCM5_gen -i molecule.pdb
+
