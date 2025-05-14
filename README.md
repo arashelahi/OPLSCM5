@@ -4,7 +4,7 @@ input : pdb file
 output : itp file
 
 ## Reference
-This software utilizes a few archived or deprticated packages,particularly mktop and Orca2CM5charges, which needed significant modification. If you are using CNCstruc software, please ensure you cite the relevant papers for the aformentioned packages.
+This software utilizes a few archived or deprticated packages,particularly mktop and Orca2CM5charges, which needed significant modification. If you are using OPLSCM5 software, please ensure you cite the relevant papers for the aformentioned packages.
   1. LigParGen web server: an automatic OPLS-AA parameter generator for organic ligands  
      Leela S. Dodda  Israel Cabeza de Vaca  Julian Tirado-Rives William L. Jorgensen 
      Nucleic Acids Research, Volume 45, Issue W1, 3 July 2017, Pages W331–W336
