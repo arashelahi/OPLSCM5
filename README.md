@@ -1,6 +1,8 @@
 # OPLSCM5
 This package enables generation of GROMACS-compatible topology file for the OPLS-AA force field, using CM5 partial charges, denoted as OPLS-CM5 force field. 
+
 input : pdb file
+
 output : itp file
 
 ## Reference
