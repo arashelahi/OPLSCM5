@@ -89,6 +89,7 @@ def bond_itp(nonbond_file,bond_file,itp_old_file,itp_new_file): ## creates the b
                 atom2=datas.loc[int(line.split()[1]),'At_types']
                 flag_b=0
                 f=open(bond_file,'r')
+                find_stat=0
                 for line_b in f:
                     if line_b.split()[:3]==['[','bondtypes',']']:
                         flag_b='bondtype'
@@ -98,10 +99,16 @@ def bond_itp(nonbond_file,bond_file,itp_old_file,itp_new_file): ## creates the b
                         if line_b.split()[0]=='[':break
                         if (((line_b.split()[0]==atom1) and (line_b.split()[1]==atom2)) or\
                             ((line_b.split()[0]==atom2) and (line_b.split()[1]==atom1))):
+                            find_stat=1
                             text="%4s%6s%6s%15s%15s\n" % (line.split()[0],line.split()[1]\
                                                     ,line_b.split()[2],line_b.split()[3],line_b.split()[4] )
                             f.close()
-                            break           
+                            break    
+                if find_stat==0:
+                    text="%4s%6s%6s%15s%15s%10s\n" % (line.split()[0],line.split()[1]\
+                        ,line.split()[2],line.split()[3],line.split()[4],'; Adopted from MKTOP' )
+                    f.close()
+                    # break       
         itp_new_read.write(text)
 
 def angle_itp(nonbond_file,bond_file,itp_old_file,itp_new_file):
@@ -121,7 +128,7 @@ def angle_itp(nonbond_file,bond_file,itp_old_file,itp_new_file):
             continue
         if flag=='angletype':
             if ((line.split()==[]) or (line.split()[0]==';')):continue
-            elif line.split()[:3]!=['[','angles',']']:
+            elif '[ angles ]' not in line:
                 atom1=datas.loc[int(line.split()[0]),'At_types']
                 atom2=datas.loc[int(line.split()[1]),'At_types']
                 atom3=datas.loc[int(line.split()[2]),'At_types']
@@ -144,10 +151,10 @@ def angle_itp(nonbond_file,bond_file,itp_old_file,itp_new_file):
                             f.close()
                             break
                 if find_stat==0:
-                    text="%4s%6s%6s%6s%15s%15s%10s\n" % (line.split()[0],line.split()[1],line.split()[2],\
-                        atom1,atom2,atom3,'NOT FOUND' )
+                    text="%4s%6s%6s%6s%15s%15s%10s\n" % (line.split()[0],line.split()[1],line.split()[2]\
+                        ,line.split()[3],line.split()[4],line.split()[5],'; Adopted from MKTOP' )
                     f.close()
-                    break
+                    # break
         itp_new_read.write(text)
 
 def dih_itp(nonbond_file,bond_file,itp_old_file,itp_new_file,dihedral_type='proper'):
