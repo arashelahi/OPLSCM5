@@ -192,6 +192,12 @@ def dih_itp(nonbond_file,bond_file,itp_old_file,itp_new_file,dihedral_type='prop
                         continue
                     if line_b.split()[0]=='[':
                         break
+                    if len(line.split()) < 6:
+                        text="; The dihedral line is not complete: %s"
+                        break
+                    if '0' in line.split()[:4]:
+                        text="; This is a zero dihedral, skipping it: %s" % line
+                        break
                     if line.split()[5]==line_b.split()[1]:
                         text="%4s%6s%6s%6s%6s%15s%15s%15s\n" % (line.split()[0],line.split()[1],line.split()[2],line.split()[3]\
                             ,str(4),line_b.split()[2],line_b.split()[3],line_b.split()[4])
@@ -207,6 +213,7 @@ def dih_itp(nonbond_file,bond_file,itp_old_file,itp_new_file,dihedral_type='prop
                 atom2=datas.loc[int(line.split()[1]),'At_types']
                 atom3=datas.loc[int(line.split()[2]),'At_types']
                 atom4=datas.loc[int(line.split()[3]),'At_types']
+                    # continue
                 Torsion_atoms=[atom1,atom2,atom3,atom4]
                 flag_b=0
                 f=open(bond_file,'r')
