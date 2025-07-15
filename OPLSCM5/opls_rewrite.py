@@ -63,7 +63,7 @@ def atom_itp(nonbond_file,itp_old_file,itp_new_file,Charges,mol_name,nrexcl=3): 
             elif line.split()[:3]!=['[','atoms',']']:
                 iter=iter+1
                 text="   %6s%10s%10s%10s%10s%15s%20s%15s\n" % (datas.loc[iter,'At_numbers'],datas.loc[iter,'opls_types'],\
-                    line.split()[2],mol_name,datas.loc[iter,'At_types'],datas.loc[iter,'At_numbers'],Charges[iter-1],line.split()[7])
+                    line.split()[2],mol_name,datas.loc[iter,'At_types'],datas.loc[iter,'At_numbers'],Charges[iter-1],line.split()[-1])
         itp_new_read.write(text)
 
 def bond_itp(nonbond_file,bond_file,itp_old_file,itp_new_file): ## creates the bond section for the itp file
