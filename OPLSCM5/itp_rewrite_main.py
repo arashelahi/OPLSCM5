@@ -75,7 +75,7 @@ def main():
     ## Creating the pdb file and top files using mktop and obabel
     # os.system(f'obabel {mol_name}.xyz -O {mol_name}.pdb')
     mktop_path = os.path.join(os.path.dirname(OPLSCM5.__file__), "mktop.pl")
-    os.system(f'{mktop_path} -i {mol_name}.pdb -o {mol_name}.top -ff opls -conect no')
+    os.system(f'{mktop_path} -i {mol_name}.pdb -o {mol_name}.top -ff opls -conect yes')
 
     if os.path.exists(str(itp_new_read)):
         os.remove(itp_new_read) 
